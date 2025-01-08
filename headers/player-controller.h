@@ -1,10 +1,10 @@
 #ifndef INCLUDE_PLAYER_CONTROLLER
 #define INCLUDE_PLAYER_CONTROLLER
 
-#include "../headers/player.h"
-#include "../headers/connect-four-game.h"
+#include <string>
 
 class Player;
+class ConnectFourGame;
 
 class PlayerController {
   public:
@@ -14,6 +14,7 @@ class PlayerController {
 
 class RealPlayerController : public PlayerController {
   public:
+    RealPlayerController();
     void let_player_set_name(Player &player, std::string &name_variable) override;
     void let_player_play(Player const &player, ConnectFourGame &game) override;
 };

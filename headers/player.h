@@ -2,12 +2,13 @@
 #define INCLUDE_PLAYER
 
 #include <string>
-#include "../headers/player-controller.h"
-#include "../headers/connect-four-game.h"
+
+class PlayerController;
+class ConnectFourGame;
 
 class Player {
   private:
-    PlayerController m_controller;
+    PlayerController *m_controller;
   
   public :
     int id;
@@ -19,8 +20,6 @@ class Player {
     void let_play(ConnectFourGame &game);
 };
 
-bool operator==(Player const &player_1, Player const &player_2) {
-  return player_1.id == player_2.id;
-}
+bool operator==(Player const &player_1, Player const &player_2);
 
 #endif

@@ -10,6 +10,9 @@
         "${file}",
         "-o",
         "${fileDirname}\\${fileBasenameNoExtension}.exe",
+        "connect-four-game.cpp",
+        "player.cpp",
+        "player-controller.cpp"
       ],
       "options": {
         "cwd": "${fileDirname}"

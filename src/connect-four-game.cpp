@@ -1,20 +1,18 @@
 #include <iostream>
+
 #include "../headers/connect-four-game.h"
+#include "../headers/player.h"
 
 bool ConnectFourGame::play_token(int column, Player player) {
   bool played = false;
   for (int line = 0; line < std::size(m_grid); line++) {
-    if (line == std::size(m_grid) - 1 || m_grid[line + 1][column] != ' ') {
-      m_grid[line][column] = player.id;
+    if (m_grid[line][column - 1] == 0 && (line == std::size(m_grid) - 1 || m_grid[line + 1][column - 1] != 0)) {
+      m_grid[line][column - 1] = player.id;
       played = true;
       break;
     }
   }
-  if (!played) {
-    std::cout << "La colonne est pleine" << std::endl;
-    return false;
-  }
-  return true;
+  return played;
 }
 
 bool ConnectFourGame::check_winner(Player &player) {
@@ -58,12 +56,12 @@ bool ConnectFourGame::check_winner(Player &player) {
 }
 
 void ConnectFourGame::switch_player(Player &current_player) {
-  if (current_player == m_player_1) {
-    current_player = m_player_2;
+  if (current_player == *m_player_1) {
+    current_player = *m_player_2;
     return;
   }
-  if (current_player == m_player_2) {
-    current_player = m_player_1;
+  if (current_player == *m_player_2) {
+    current_player = *m_player_1;
   }
 }
 
@@ -72,11 +70,11 @@ void ConnectFourGame::print_grid() {
   for (const auto &line : m_grid) {
     for (const auto &box : line) {
       char character_to_display = ' ';
-      if (box == m_player_1.id) {
-        character_to_display = m_player_1.token;
+      if (box == m_player_1->id) {
+        character_to_display = m_player_1->token;
       }
-      if (box == m_player_2.id) {
-        character_to_display = m_player_2.token;
+      if (box == m_player_2->id) {
+        character_to_display = m_player_2->token;
       }
       std::cout << "|" << character_to_display;
     }
@@ -85,7 +83,7 @@ void ConnectFourGame::print_grid() {
   std::cout << std::endl;
 }
 
-ConnectFourGame::ConnectFourGame(Player player_1, Player player_2)
+ConnectFourGame::ConnectFourGame(Player *player_1, Player *player_2)
   : m_player_1(player_1), m_player_2(player_2) {
   std::array<int, 7> default_line;
   default_line.fill(0);
@@ -94,16 +92,16 @@ ConnectFourGame::ConnectFourGame(Player player_1, Player player_2)
 
 void ConnectFourGame::start() {
   Player *winner;
-  Player *current_player = &m_player_1;
+  Player current_player = *m_player_1;
   while (true) {
     print_grid();
-    current_player->let_play(*this);
-    if (check_winner(*current_player)) {
-      winner = current_player;
+    current_player.let_play(*this);
+    if (check_winner(current_player)) {
+      winner = &current_player;
       break;
     }
-    switch_player(*current_player);
+    switch_player(current_player);
   }
-  std::cout << winner->name << " a gagné !" << std::endl;
   print_grid();
+  std::cout << winner->name << " a gagné !\n" << std::endl;
 }
