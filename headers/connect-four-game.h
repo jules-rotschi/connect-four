@@ -1,5 +1,5 @@
-#ifndef INCLUDE_GAME
-#define INCLUDE_GAME
+#ifndef GAME_H
+#define GAME_H
 
 #include <array>
 #include <string>
@@ -13,9 +13,10 @@ class ConnectFourGame {
     Grid m_grid;
     Player *m_player_1;
     Player *m_player_2;
+    Player *m_current_player;
 
-    bool check_winner(Player &player);
-    void switch_player(Player &current_player);
+    bool check_winner(Player const &player);
+    void switch_current_player();
     void print_grid();
   
   public:
@@ -24,5 +25,7 @@ class ConnectFourGame {
     void start();
     bool play_token(int column, Player player);
 };
+
+void initialize_players(Player &player_1, Player &player_2);
 
 #endif

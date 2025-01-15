@@ -1,5 +1,5 @@
-#ifndef INCLUDE_PLAYER
-#define INCLUDE_PLAYER
+#ifndef PLAYER_H
+#define PLAYER_H
 
 #include <string>
 
@@ -14,8 +14,10 @@ class Player {
     int id;
     char token;
     std::string name;
+    bool real;
 
-    Player(int id, char token);
+    Player() = default;
+    Player(int id, char token, bool real);
     void let_set_name(std::string &name_variable);
     void let_play(ConnectFourGame &game);
 };

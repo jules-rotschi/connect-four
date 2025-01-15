@@ -1,5 +1,6 @@
 #include <iostream>
 #include <limits>
+
 #include "../headers/player-controller.h"
 #include "../headers/player.h"
 #include "../headers/connect-four-game.h"
@@ -10,6 +11,7 @@ void PlayerController::let_player_play(Player const &player, ConnectFourGame &ga
 RealPlayerController::RealPlayerController() {}
 
 void RealPlayerController::let_player_set_name(Player &player, std::string &name_variable) {
+  std::cout << "Joueur " << player.id << ", entre ton nom : ";
   while (!(std::cin >> name_variable) || name_variable.length() < 2) {
     if (std::cin.eof()) {
       throw std::runtime_error("Le flux a été fermé");
@@ -47,4 +49,14 @@ void RealPlayerController::let_player_play(Player const &player, ConnectFourGame
     }
   }
   std::cout << "\n";
+}
+
+AIController::AIController() {}
+
+void AIController::let_player_set_name(Player &player, std::string &name_variable) {
+  player.name = "AI Player";
+}
+
+void AIController::let_player_play(Player const &player, ConnectFourGame &game) {
+  game.play_token(1, player);
 }

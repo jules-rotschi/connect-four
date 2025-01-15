@@ -3,9 +3,14 @@
 #include "../headers/player.h"
 #include "../headers/player-controller.h"
 
-Player::Player(int id, char token) : id(id), token(token) {
-  m_controller = new RealPlayerController();
+Player::Player(int id, char token, bool real) : id(id), token(token) {
+  if (real) {
+    m_controller = new RealPlayerController();
+  } else {
+    m_controller = new AIController();
+  }
   name = "Player";
+  this->real = real;
 }
 
 void Player::let_set_name(std::string &name_variable) {
