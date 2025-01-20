@@ -5,9 +5,9 @@
 
 Player::Player(int id, char token, bool real) : id(id), token(token) {
   if (real) {
-    m_controller = new RealPlayerController();
+    m_controller = std::make_unique<RealPlayerController>();
   } else {
-    m_controller = new AIController();
+    m_controller = std::make_unique<AIController>();
   }
   name = "Player";
   this->real = real;

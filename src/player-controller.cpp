@@ -25,7 +25,7 @@ void RealPlayerController::let_player_play(Player const &player, ConnectFourGame
     input(column, column_validator, "Les colonnes sont numérotées de 1 à 7. Entre un nombre compris dans cet intervalle : ");
     is_token_played = game.play_token(column, player);
     if (!is_token_played) {
-      std::cout << u8"La colonne est complète, choisis-en une autre ! ";
+      std::cout << "La colonne est complète, choisis-en une autre ! ";
     }
   }
   std::cout << "\n";
@@ -34,9 +34,47 @@ void RealPlayerController::let_player_play(Player const &player, ConnectFourGame
 AIController::AIController() {}
 
 void AIController::let_player_set_name(Player &player, std::string &out_name) const {
-  player.name = "AI Player";
+  out_name = "IA";
+  player.name = out_name;
 }
 
 void AIController::let_player_play(Player const &player, ConnectFourGame &game) const {
-  game.play_token(1, player);
+  std::cout << player.name << ", à toi de jouer !\n" << std::endl;
+  if (game.is_grid_empty()) {
+    game.play_token(4, player);
+  }
+  std::array<bool, 7> possible_moves;
+  possible_moves.fill(true);
+
+  Grid current_grid = game.copy_grid();
+
+  for (int i = 0; i < 7; i++) {
+    if (current_grid.is_column_full(i)) {
+      possible_moves[i] = false;
+    }
+  }
+
+  int possible_moves_count = 0;
+
+  for (bool const move : possible_moves) {
+    possible_moves_count += move;
+  }
+
+  if (possible_moves_count == 1) {
+    for (int i = 0; i < 7; i++) {
+      if (possible_moves[i]) {
+        game.play_token(i, player);
+      }
+    }
+  }
+
+  Grid virtual_grid;
+
+  for (int i = 0; i < 7; i++) {
+    virtual_grid = current_grid;
+    virtual_grid.play_token(i, player.id);
+    if (virtual_grid.check_winner(player)) {
+      game.play_token(i, player);
+    }
+  }  
 }

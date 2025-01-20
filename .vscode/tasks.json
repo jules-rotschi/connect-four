@@ -14,7 +14,8 @@
         "${fileDirname}\\${fileBasenameNoExtension}.exe",
         "connect-four-game.cpp",
         "player.cpp",
-        "player-controller.cpp"
+        "player-controller.cpp",
+        "grid.cpp"
       ],
       "options": {
         "cwd": "${fileDirname}"

@@ -1,59 +1,17 @@
 #include <iostream>
+#include <memory>
 
 #include "connect-four-game.h"
 #include "player.h"
 #include "input.h"
+#include "grid.h"
 
 bool ConnectFourGame::play_token(int column, Player const &player) {
-  bool played = false;
-  for (int line = 0; line < std::size(m_grid); line++) {
-    if (m_grid[line][column - 1] == 0 && (line == std::size(m_grid) - 1 || m_grid[line + 1][column - 1] != 0)) {
-      m_grid[line][column - 1] = player.id;
-      played = true;
-      break;
-    }
-  }
-  return played;
+  return m_grid->play_token(column, player.id);
 }
 
 bool ConnectFourGame::check_winner(Player const &player) const {
-  bool win = false;
-  for (int line = 0; line < std::size(m_grid); line++) {
-    for (int box = 0; box < std::size(m_grid[line]); box++) {
-
-      bool horizontal =
-        box <= std::size(m_grid[line]) - 4
-        && m_grid[line][box] == player.id
-        && m_grid[line][box] == m_grid[line][box + 1]
-        && m_grid[line][box] == m_grid[line][box + 2]
-        && m_grid[line][box] == m_grid[line][box + 3];
-      
-      bool vertical =
-        line <= std::size(m_grid) - 4
-        && m_grid[line][box] == player.id
-        && m_grid[line][box] == m_grid[line + 1][box]
-        && m_grid[line][box] == m_grid[line + 2][box]
-        && m_grid[line][box] == m_grid[line + 3][box];
-      
-      bool diagonal =
-        line <= std::size(m_grid) - 4
-        && m_grid[line][box] == player.id
-        && ((box <= std::size(m_grid[line]) - 4
-        && m_grid[line][box] == m_grid[line + 1][box + 1]
-        && m_grid[line][box] == m_grid[line + 2][box + 2]
-        && m_grid[line][box] == m_grid[line + 3][box + 3])
-        || (box >= 3
-        && m_grid[line][box] == m_grid[line + 1][box - 1]
-        && m_grid[line][box] == m_grid[line + 2][box - 2]
-        && m_grid[line][box] == m_grid[line + 3][box - 3]));
-
-      if (horizontal || vertical || diagonal) {
-        win = true;
-        break;
-      }
-    }
-  }
-  return win;
+  return m_grid->check_winner(player);
 }
 
 void ConnectFourGame::switch_current_player() {
@@ -67,28 +25,12 @@ void ConnectFourGame::switch_current_player() {
 }
 
 void ConnectFourGame::print_grid() const {
-  std::cout << " 1 2 3 4 5 6 7 " << std::endl;
-  for (const auto &line : m_grid) {
-    for (const auto &box : line) {
-      char character_to_display = ' ';
-      if (box == m_player_1->id) {
-        character_to_display = m_player_1->token;
-      }
-      if (box == m_player_2->id) {
-        character_to_display = m_player_2->token;
-      }
-      std::cout << "|" << character_to_display;
-    }
-    std::cout << "|\n";
-  }
-  std::cout << std::endl;
+  m_grid->print(*m_player_1, *m_player_2);
 }
 
 ConnectFourGame::ConnectFourGame(Player *player_1, Player *player_2)
   : m_player_1(player_1), m_player_2(player_2) {
-  std::array<int, 7> default_line;
-  default_line.fill(0);
-  m_grid.fill(default_line);
+  m_grid = std::make_unique<Grid>();
 }
 
 void ConnectFourGame::start() {
@@ -101,10 +43,25 @@ void ConnectFourGame::start() {
       winner = m_current_player;
       break;
     }
+    if (m_grid->is_full()) {
+      break;
+    }
     switch_current_player();
   }
   print_grid();
-  std::cout << winner->name << " a gagné !\n" << std::endl;
+  if (winner) {
+    std::cout << winner->name << " a gagné !\n" << std::endl;
+  } else {
+    std::cout << "Match null !\n" << std::endl;
+  }
+}
+
+bool ConnectFourGame::is_grid_empty() const {
+  return m_grid->is_empty();
+}
+
+Grid ConnectFourGame::copy_grid() const {
+  return Grid(*m_grid);
 }
 
 void initialize_players(Player &player_1, Player &player_2) {

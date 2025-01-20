@@ -2,6 +2,7 @@
 #define PLAYER_CONTROLLER_H
 
 #include <string>
+#include <memory>
 
 class Player;
 class ConnectFourGame;

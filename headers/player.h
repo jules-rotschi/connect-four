@@ -2,13 +2,15 @@
 #define PLAYER_H
 
 #include <string>
+#include <memory>
 
-class PlayerController;
+#include "player-controller.h"
+
 class ConnectFourGame;
 
 class Player {
   private:
-    PlayerController *m_controller;
+    std::unique_ptr<PlayerController> m_controller;
   
   public :
     int id;
