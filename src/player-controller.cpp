@@ -1,51 +1,31 @@
 #include <iostream>
 #include <limits>
 
-#include "../headers/player-controller.h"
-#include "../headers/player.h"
-#include "../headers/connect-four-game.h"
-
-void PlayerController::let_player_set_name(Player &player, std::string &name_variable) {}
-void PlayerController::let_player_play(Player const &player, ConnectFourGame &game) {}
+#include "input.h"
+#include "player-controller.h"
+#include "player.h"
+#include "connect-four-game.h"
 
 RealPlayerController::RealPlayerController() {}
 
-void RealPlayerController::let_player_set_name(Player &player, std::string &name_variable) {
+void RealPlayerController::let_player_set_name(Player &player, std::string &out_name) const {
   std::cout << "Joueur " << player.id << ", entre ton nom : ";
-  while (!(std::cin >> name_variable) || name_variable.length() < 2) {
-    if (std::cin.eof()) {
-      throw std::runtime_error("Le flux a été fermé");
-    } else if (std::cin.fail()) {
-      std::cout << "Entrée invalide. Recommence : ";
-      std::cin.clear();
-      std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-    } else {
-      std::cout << "Ton nom doit comporter au moins deux lettres. Entre un nom plus long : ";
-    }
-  }
+  auto name_validator = [](std::string &name) -> bool { return name.length() >= 2; };
+  input(out_name, name_validator, "Ton nom doit comporter au moins deux lettres. Entre un nom plus long : ");
   std::cout << "\n";
-  player.name = name_variable;
+  player.name = out_name;
 }
 
-void RealPlayerController::let_player_play(Player const &player, ConnectFourGame &game) {
+void RealPlayerController::let_player_play(Player const &player, ConnectFourGame &game) const {
   std::cout << player.name << ", à toi de jouer ! Entre le numéro de la colonne où tu veux jouer (entre 1 et 7): ";
   int column { 0 };
   bool is_token_played {false};
+  auto column_validator = [](int column) -> bool { return column <= 7 || column >= 1; };
   while (!is_token_played) {
-    while (!(std::cin >> column) || column > 7 || column < 1) {
-      if (std::cin.eof()) {
-        throw std::runtime_error("Le flux a été fermé !\n");
-      } else if (std::cin.fail()) {
-        std::cout << "Entrée invalide. Recommence : ";
-        std::cin.clear();
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-      } else {
-        std::cout << "Les colonnes sont numérotées de 1 à 7. Entre un nombre compris dans cet intervalle : ";
-      }
-    }
+    input(column, column_validator, "Les colonnes sont numérotées de 1 à 7. Entre un nombre compris dans cet intervalle : ");
     is_token_played = game.play_token(column, player);
     if (!is_token_played) {
-      std::cout << "La colonne est complète, choisis-en une autre ! ";
+      std::cout << u8"La colonne est complète, choisis-en une autre ! ";
     }
   }
   std::cout << "\n";
@@ -53,10 +33,10 @@ void RealPlayerController::let_player_play(Player const &player, ConnectFourGame
 
 AIController::AIController() {}
 
-void AIController::let_player_set_name(Player &player, std::string &name_variable) {
+void AIController::let_player_set_name(Player &player, std::string &out_name) const {
   player.name = "AI Player";
 }
 
-void AIController::let_player_play(Player const &player, ConnectFourGame &game) {
+void AIController::let_player_play(Player const &player, ConnectFourGame &game) const {
   game.play_token(1, player);
 }

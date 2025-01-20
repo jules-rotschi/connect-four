@@ -3,9 +3,9 @@
 #include <array>
 #include <limits>
 
-#include "../headers/player.h"
-#include "../headers/connect-four-game.h"
-#include "../headers/input.h"
+#include "player.h"
+#include "connect-four-game.h"
+#include "input.h"
 
 int main(int argc, char **argv) {
 
@@ -14,13 +14,15 @@ int main(int argc, char **argv) {
 
   initialize_players(player_1, player_2);
 
-  std::string player_name { "" };
+  std::string player_name;
 
   player_1.let_set_name(player_name);
   player_2.let_set_name(player_name);
 
   ConnectFourGame game { &player_1, &player_2 };
   game.start();
+
+  std::cin.get();
 
   return 0;
 }

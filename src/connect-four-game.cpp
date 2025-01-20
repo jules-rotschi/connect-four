@@ -1,10 +1,10 @@
 #include <iostream>
 
-#include "../headers/connect-four-game.h"
-#include "../headers/player.h"
-#include "../headers/input.h"
+#include "connect-four-game.h"
+#include "player.h"
+#include "input.h"
 
-bool ConnectFourGame::play_token(int column, Player player) {
+bool ConnectFourGame::play_token(int column, Player const &player) {
   bool played = false;
   for (int line = 0; line < std::size(m_grid); line++) {
     if (m_grid[line][column - 1] == 0 && (line == std::size(m_grid) - 1 || m_grid[line + 1][column - 1] != 0)) {
@@ -16,7 +16,7 @@ bool ConnectFourGame::play_token(int column, Player player) {
   return played;
 }
 
-bool ConnectFourGame::check_winner(Player const &player) {
+bool ConnectFourGame::check_winner(Player const &player) const {
   bool win = false;
   for (int line = 0; line < std::size(m_grid); line++) {
     for (int box = 0; box < std::size(m_grid[line]); box++) {
@@ -66,7 +66,7 @@ void ConnectFourGame::switch_current_player() {
   }
 }
 
-void ConnectFourGame::print_grid() {
+void ConnectFourGame::print_grid() const {
   std::cout << " 1 2 3 4 5 6 7 " << std::endl;
   for (const auto &line : m_grid) {
     for (const auto &box : line) {

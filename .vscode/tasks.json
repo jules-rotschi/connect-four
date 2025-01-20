@@ -8,6 +8,8 @@
         "-fdiagnostics-color=always",
         "-g",
         "${file}",
+        "-I",
+				"${workspaceFolder}\\headers",
         "-o",
         "${fileDirname}\\${fileBasenameNoExtension}.exe",
         "connect-four-game.cpp",

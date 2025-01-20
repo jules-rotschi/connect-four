@@ -18,8 +18,8 @@ class Player {
 
     Player() = default;
     Player(int id, char token, bool real);
-    void let_set_name(std::string &name_variable);
-    void let_play(ConnectFourGame &game);
+    void let_set_name(std::string &out_name);
+    void let_play(ConnectFourGame &game) const;
 };
 
 bool operator==(Player const &player_1, Player const &player_2);
