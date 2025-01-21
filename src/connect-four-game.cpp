@@ -11,7 +11,7 @@ bool ConnectFourGame::play_token(int column, Player const &player) {
 }
 
 bool ConnectFourGame::check_winner(Player const &player) const {
-  return m_grid->check_winner(player);
+  return m_grid->check_winner(player.id);
 }
 
 void ConnectFourGame::switch_current_player() {

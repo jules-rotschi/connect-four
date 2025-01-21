@@ -4,7 +4,7 @@
 #include "player.h"
 
 Grid::Grid() {
-  std::array<int, 7> default_line;
+  std::array<int, GRID_COLUMN_COUNT> default_line;
   default_line.fill(0);
   m_data.fill(default_line);
 }
@@ -41,7 +41,7 @@ bool Grid::is_column_full(int column) const {
 }
 
 bool Grid::is_full() const {
-  for (int i = 0; i < 7; i++) {
+  for (int i = 0; i < GRID_COLUMN_COUNT; i++) {
     if (!is_column_full(i)) {
       return false;
     }
@@ -49,28 +49,28 @@ bool Grid::is_full() const {
   return true;
 }
 
-bool Grid::check_winner(Player const &player) const {
+bool Grid::check_winner(int player_id) const {
   bool win = false;
   for (int line = 0; line < std::size(m_data); line++) {
     for (int box = 0; box < std::size(m_data[line]); box++) {
 
       bool horizontal =
         box <= std::size(m_data[line]) - 4
-        && m_data[line][box] == player.id
+        && m_data[line][box] == player_id
         && m_data[line][box] == m_data[line][box + 1]
         && m_data[line][box] == m_data[line][box + 2]
         && m_data[line][box] == m_data[line][box + 3];
       
       bool vertical =
         line <= std::size(m_data) - 4
-        && m_data[line][box] == player.id
+        && m_data[line][box] == player_id
         && m_data[line][box] == m_data[line + 1][box]
         && m_data[line][box] == m_data[line + 2][box]
         && m_data[line][box] == m_data[line + 3][box];
       
       bool diagonal =
         line <= std::size(m_data) - 4
-        && m_data[line][box] == player.id
+        && m_data[line][box] == player_id
         && ((box <= std::size(m_data[line]) - 4
         && m_data[line][box] == m_data[line + 1][box + 1]
         && m_data[line][box] == m_data[line + 2][box + 2]
